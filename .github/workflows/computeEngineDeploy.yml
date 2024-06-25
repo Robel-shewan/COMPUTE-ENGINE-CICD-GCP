@@ -1,55 +1,30 @@
-name: Deploy to Compute Engine
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
-      - name: Use Node.js 16
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build the application (adjust for your build command)
-        run: npm run build:prod # Replace with your build command
-
-      - name: Deploy to Compute Engine
+      - name: Set up SSH
         run: |
-          # Replace with your actual values
-          HOST=your_instance_ip_address
-          USER=your_username_on_instance
-          TARGET_DIR=/path/to/deployment/directory
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 35.184.253.232 >> ~/.ssh/known_hosts
 
-          # Use Workload Identity Federation (recommended)
-          if [[ -z "${SERVICE_ACCOUNT_KEY}" ]]; then
-            echo "Using Workload Identity Federation for authentication"
-          else
-            echo "Using service account for authentication"
-            echo "$SERVICE_ACCOUNT_KEY" | base64 -d > key.json
-            chmod 600 key.json
-          fi
-
-          # Connect to the instance and copy the built application
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_KEY }} $USER@$HOST << EOF
-            mkdir -p $TARGET_DIR
-            rm -rf $TARGET_DIR/*  # Optionally remove existing files (be cautious)
-            scp -r -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ./build/* $USER@$HOST:$TARGET_DIR
+      - name: Deploy to GCP Compute Engine
+        run: |
+          ssh -i ~/.ssh/id_rsa ubuntu@35.184.253.232 << 'EOF'
+            cd /home/shewangzawrobel/compute-engine-cicd-gcp
+            git pull origin main
+            npm install
+            pm2 restart all
           EOF
-
-          # (Optional) If using a service account, remove the temporary key
-          if [[ ! -z "${SERVICE_ACCOUNT_KEY}" ]]; then
-            rm key.json
-          fi
-
-        env:
-          # Optional environment variables for deployment script
-          CI: true # Signal CI environment to scripts on the instance
-
