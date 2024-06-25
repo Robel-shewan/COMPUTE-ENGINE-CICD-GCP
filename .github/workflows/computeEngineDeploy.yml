@@ -22,8 +22,7 @@ jobs:
 
       - name: Deploy to GCP Compute Engine
         run: |
-          ssh -i ~/.ssh/id_rsa shewangzawrobel@gmail.com << 'EOF'
+          ssh -i ~/.ssh/id_rsa shewangzawrobel@35.184.253.232 << 'EOF'
             cd /home/shewangzawrobel
             mkdir testing-app
-
           EOF
