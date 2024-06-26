@@ -29,5 +29,17 @@ else
   pm2 start dist/main.js --name "$APP_NAME"
 fi
 
+
+# Check if the application is already managed by PM2
+if pm2 describe "$APP_NAME" > /dev/null; then
+  echo "Application is already managed by PM2. Restarting it."
+  npm run pm2-restart
+else
+  echo "Application is not managed by PM2. Starting it for the first time."
+  pm2 start dist/main.js --name "$APP_NAME"
+
+fi
+
+
 # Save the PM2 process list and corresponding environments
 pm2 save --force
