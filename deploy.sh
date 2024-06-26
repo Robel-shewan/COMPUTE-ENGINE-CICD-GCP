@@ -4,6 +4,18 @@
 PROJECT_DIR="/home/shewangzawrobel/testing/COMPUTE-ENGINE-CICD-GCP"
 APP_NAME="nestjs-server"
 
+# Define environment variables
+ENV_VARS="
+DB_HOST=${DB_HOST}
+DB_USERNAME=${DB_USER}
+DB_PASSWORD=${DB_PASS}
+DB_NAME=${DB_NAME}
+DB_PORT=${DB_PORT}
+"
+
+# Create or update the .env file
+echo "$ENV_VARS" > "$PROJECT_DIR/.env"
+
 # Check if the directory exists
 if [ -d "$PROJECT_DIR" ]; then
   echo "Directory exists. Pulling latest changes."
