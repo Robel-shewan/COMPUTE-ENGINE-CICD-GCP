@@ -18,7 +18,7 @@ fi
 # Install npm dependencies
 npm install
 
-npm run start
+
 
 # Check if the application is already managed by PM2
 if pm2 list | grep -q "$APP_NAME"; then
@@ -26,7 +26,7 @@ if pm2 list | grep -q "$APP_NAME"; then
   pm2 restart "$APP_NAME"
 else
   echo "Application is not managed by PM2. Starting it for the first time."
-  pm2 start  --name "$APP_NAME" -- start
+  pm2 start dist/main.js --name "$APP_NAME"
 fi
 
 # Save the PM2 process list and corresponding environments
