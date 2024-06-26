@@ -30,4 +30,4 @@ else
 fi
 
 # Save the PM2 process list and corresponding environments
-pm2 save
+pm2 save --force
