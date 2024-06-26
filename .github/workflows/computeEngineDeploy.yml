@@ -20,13 +20,9 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 35.184.253.232 >> ~/.ssh/known_hosts
 
-      - name: Copy Deployment Script
-        run: |
-          scp -i ~/.ssh/id_rsa deploy.sh shewangzawrobel@35.184.253.232:/home/shewangzawrobel/deploy.sh
-
       - name: Deploy to GCP Compute Engine
         run: |
           ssh -i ~/.ssh/id_rsa shewangzawrobel@35.184.253.232 << 'EOF'
-            chmod +x /home/shewangzawrobel/deploy.sh
-            /home/shewangzawrobel/deploy.sh
+            cd /home/shewangzawrobel
+            mkdir apptesting
           EOF
