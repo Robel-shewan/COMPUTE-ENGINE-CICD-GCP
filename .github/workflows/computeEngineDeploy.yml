@@ -27,12 +27,12 @@ jobs:
       - name: Deploy to GCP Compute Engine
         env:
           DB_HOST: ${{ secrets.DB_HOST }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASS: ${{ secrets.DB_PASS }}
+          DB_USERNAME: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASS }}
           DB_NAME: ${{ secrets.DB_NAME }}
           DB_PORT: ${{ secrets.DB_PORT }}
         run: |
           ssh -i ~/.ssh/id_rsa shewangzawrobel@35.184.253.232 << 'EOF'
             chmod +x /home/shewangzawrobel/deploy.sh
-            DB_HOST=${DB_HOST} DB_PORT=${DB_PORT} DB_USER=${DB_USER} DB_PASS=${DB_PASS} DB_NAME=${DB_NAME} /home/shewangzawrobel/deploy.sh
+            DB_HOST=${DB_HOST} DB_PORT=${DB_PORT} DB_USER=${DB_USERNAME} DB_PASS=${DB_PASSWORD} DB_NAME=${DB_NAME} /home/shewangzawrobel/deploy.sh
           EOF
